@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace BookStore.Infrastructure.Persistence.Configurations;
+namespace BookStore.Infrastructure.Persistence.Configurations.Identity;
 
 internal class UserConfigurations : IEntityTypeConfiguration<ApplicationUser>
 {
