@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.AspNetCore.Identity;
+
 namespace BookStore.Infrastructure;
 
 public static class DependencyInjection
@@ -31,7 +32,12 @@ public static class DependencyInjection
             .BindConfiguration(JwtOptions.SectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
-            
+
+        services.AddIdentityCore<ApplicationUser>()
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
         return services;
     }
 }

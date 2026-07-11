@@ -1,6 +1,6 @@
 ﻿namespace BookStore.Application.Features.Authentication.Errors;
 
-public static class AuthError
+public static class AuthErrors
 {
     public static Error InvalidCredentials => new Error("Account.InvalidCredentials"
        , "Invalid Email Or Password", ErrorType.Unauthorized);

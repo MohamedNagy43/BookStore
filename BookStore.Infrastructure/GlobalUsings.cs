@@ -7,7 +7,6 @@ global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using BookStore.Shared.Constants.Identity;
 global using BookStore.Application.Abstractions;
 global using BookStore.Infrastructure.Authentication;
-global using SurveyBasket.Api.Authentication;
 global using BookStore.Application.Common.Result;
 global using BookStore.Application.Features.Authentication.Contracts.Requests;
 global using BookStore.Application.Features.Authentication.Contracts.Responses;

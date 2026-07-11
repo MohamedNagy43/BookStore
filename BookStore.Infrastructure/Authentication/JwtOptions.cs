@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SurveyBasket.Api.Authentication;
+namespace BookStore.Infrastructure.Authentication;
 
 public class JwtOptions
 {
