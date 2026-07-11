@@ -11,7 +11,8 @@ public static class DependencyInjection
 
         // Layer Dependency Injection
         services
-            .AddInfrastructureDependencyInjection(configuration);
+            .AddInfrastructureDependencyInjection(configuration)
+            .AddApplicationDependencyInjection();
 
         return services;
     }

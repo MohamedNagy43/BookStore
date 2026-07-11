@@ -1,0 +1,7 @@
+﻿namespace BookStore.Application.Features.Authentication.Contracts.Requests;
+
+public record ResetPasswordRequest(
+    string Email,
+    string Code,
+    string NewPassword
+);

@@ -1,4 +1,5 @@
-﻿namespace BookStore.Infrastructure;
+﻿
+namespace BookStore.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -8,7 +9,8 @@ public static class DependencyInjection
             throw new InvalidOperationException("Connection string of name DefaultConnection is missed");
 
         services
-            .AddDataBaseConfig(connectionString);
+            .AddDataBaseConfig(connectionString)
+            .AddAuthenticationConfig();
 
         return services;
     }
@@ -19,6 +21,17 @@ public static class DependencyInjection
         {
             options.UseSqlServer(connectionString);
         });
+        return services;
+    }
+    private static IServiceCollection AddAuthenticationConfig(this IServiceCollection services)
+    {
+        services.AddScoped<IJwtProvider, JwtProvider>();
+
+        services.AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+            
         return services;
     }
 }
