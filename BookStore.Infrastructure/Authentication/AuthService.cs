@@ -82,29 +82,161 @@ public class AuthService(UserManager<ApplicationUser> userManager,
 
         return Result.Success();
     }
-    public Task<Result> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<Result> ResendEmailConfirmationCodeAsync(string email, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        if (await _userManager.FindByEmailAsync(email) is not { } user)
+            return Result.Success();
+
+        if (user.IsDisabled)
+            return Result.Failure(AuthErrors.AccountDisabled);
+
+        if (user.EmailConfirmed)
+            return Result.Failure(AuthErrors.EmailAlreadyConfirmed);
+
+        string token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        string code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        await SendConfirmationEmailAsync(user, code);
+
+        return Result.Success();
     }
-    public Task<Result> RevokeRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
+    public async Task<Result> ConfirmEmailAsync(ConfirmEmailRequest request)
     {
-        throw new NotImplementedException();
+        var user = await _userManager.FindByIdAsync(request.UserId);
+
+        if (user is null)
+            return Result.Failure(AuthErrors.InvalidEmailConfirmationCode);
+
+        if (user.EmailConfirmed)
+            return Result.Failure(AuthErrors.EmailAlreadyConfirmed);
+
+        string token;
+        try
+        {
+            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+        }
+        catch
+        {
+            return Result.Failure(AuthErrors.InvalidEmailConfirmationCode);
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (!result.Succeeded)
+            return Result.Failure(AuthErrors.InvalidEmailConfirmationCode);
+
+        await _userManager.AddToRoleAsync(user, DefaultRoles.Customer.Name);
+
+        return Result.Success();
     }
-    public Task<Result> ResendEmailConfirmationCodeAsync(string email, CancellationToken cancellationToken = default)
+    public async Task<Result> SendResetPasswordCodeAsync(string email)
     {
-        throw new NotImplementedException();
+        if (await _userManager.FindByEmailAsync(email) is not { } user)
+            return Result.Success();
+
+        if (!user.EmailConfirmed)
+            return Result.Failure(AuthErrors.EmailNotConfirmed with { ErrorType = ErrorType.Validation });
+
+        string token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
+        // build email and sent
+        var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
+        var body = await EmailBodyBuilder.BuildEmailBodyAsync("ForgetPassword", new Dictionary<string, string>
+        {
+            {"{{name}}",user.FirstName},
+            {"{{action_url}}",$"{origin}/auth/reset-password?email={user.Email}&code={code}"}
+        });
+
+        BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(email, "BookStore: reset your Password", body));
+        return Result.Success();
     }
-    public Task<Result> ConfirmEmailAsync(ConfirmEmailRequest request)
+    public async Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
     {
-        throw new NotImplementedException();
+        if (await _userManager.FindByEmailAsync(request.Email) is not { } user)
+            return Result.Failure(AuthErrors.InvalidForgetPasswordCode);
+
+        string token;
+        try
+        {
+            token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+        }
+        catch
+        {
+            return Result.Failure(AuthErrors.InvalidForgetPasswordCode);
+        }
+        var result = await _userManager.ResetPasswordAsync(user, token, request.NewPassword);
+
+        if (result.Succeeded)
+            return Result.Success();
+        else
+            return Result.Failure(AuthErrors.InvalidForgetPasswordCode);
     }
-    public Task<Result> SendResetPasswordCodeAsync(string email)
+    public async Task<Result<AuthResponse>> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+
+        var userId = _jwtProvider.ValidateToken(token, false);
+
+        if (userId is null)
+            return Result.Failure<AuthResponse>(AuthErrors.InvalidTokens);
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            return Result.Failure<AuthResponse>(AuthErrors.InvalidTokens);
+
+        if (user.IsDisabled)
+            return Result.Failure<AuthResponse>(AuthErrors.AccountDisabled);
+
+        if (user.LockoutEnd is not null && user.LockoutEnd > DateTime.UtcNow)
+            return Result.Failure<AuthResponse>(AuthErrors.AccountDisabled);
+
+
+        var userRefreshToken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken && x.IsActive);
+
+        if (userRefreshToken is null)
+            return Result.Failure<AuthResponse>(AuthErrors.InvalidTokens);
+
+        userRefreshToken.Revoke();
+        // Generate
+
+        var claims = await GetUserClaims(user, cancellationToken);
+        var (accessToken, expiresIn) = _jwtProvider.GenerateToken(claims);
+
+        var newRefreshToken = new RefreshToken
+        {
+            Token = GenerateRefreshToken(),
+            ExpireOn = DateTime.UtcNow.AddDays(_refreshTokenOptions.ExpirationInDays)
+        };
+
+        user.RefreshTokens.Add(newRefreshToken);
+        await _userManager.UpdateAsync(user);
+
+        AuthResponse response =
+            new(user.Id, user.Email, user.FirstName, user.LastName, accessToken, expiresIn, newRefreshToken.Token, newRefreshToken.ExpireOn);
+        return Result.Success(response);
     }
-    public Task<Result> ResetPasswordAsync(ResetPasswordRequest request)
+    public async Task<Result> RevokeRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        // Access Token Validation
+        string? UserId = _jwtProvider.ValidateToken(token, validateLifeTime: true);
+        if (UserId is null)
+            return Result.Failure(AuthErrors.InvalidTokens);
+
+        var user = await _userManager.FindByIdAsync(UserId);
+        if (user is null)
+            return Result.Failure(AuthErrors.InvalidTokens);
+
+        // Refresh Token Validation
+        RefreshToken? existToken = user.RefreshTokens.SingleOrDefault(refresh => refresh.Token == refreshToken && refresh.IsActive);
+
+        if (existToken is null)
+            return Result.Failure(AuthErrors.InvalidTokens);
+
+        existToken.Revoke();
+        await _userManager.UpdateAsync(user);
+
+        return Result.Success();
     }
 
     // Private
@@ -149,5 +281,4 @@ public class AuthService(UserManager<ApplicationUser> userManager,
 
         BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "Confirm email at Book Store", emailBody));
     }
-
 }
