@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace SurveyBasket.Api.Helpers;
+namespace BookStore.Infrastructure.Helpers;
 
 public static class EmailBodyBuilder
 {

@@ -22,5 +22,14 @@ global using Mapster;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.WebUtilities;
 global using System.Text;
+global using BookStore.Application.Features.User.Errors;
+global using BookStore.Application.Features.User.Services;
+global using BookStore.Infrastructure.Helpers;
+global using Hangfire;
+global using Microsoft.AspNetCore.Identity.UI.Services;
+global using BookStore.Application.Features.Role.Errors;
+global using BookStore.Application.Features.Role.Services;
+global using BookStore.Application.Features.User.Contracts.Requests;
+global using BookStore.Application.Features.User.Contracts.Responses;
 
 
