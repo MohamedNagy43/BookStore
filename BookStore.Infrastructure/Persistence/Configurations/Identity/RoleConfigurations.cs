@@ -13,7 +13,7 @@ internal class RoleConfigurations : IEntityTypeConfiguration<ApplicationRole>
                 NormalizedName = DefaultRoles.Admin.Name.ToUpper(),
                 ConcurrencyStamp = DefaultRoles.Admin.ConcurrencyStamp,
                 IsDefault = DefaultRoles.Admin.IsDefault,
-            },    
+            },
 
             new ApplicationRole{
                 Id = DefaultRoles.Customer.Id,
@@ -21,7 +21,7 @@ internal class RoleConfigurations : IEntityTypeConfiguration<ApplicationRole>
                 NormalizedName = DefaultRoles.Customer.Name.ToUpper(),
                 ConcurrencyStamp = DefaultRoles.Customer.ConcurrencyStamp,
                 IsDefault = DefaultRoles.Customer.IsDefault,
-            },    
+            },
         ]);
     }
 }

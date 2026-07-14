@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BookStore.Infrastructure.Services;
+using BookStore.Infrastructure.Settings;
+using Hangfire;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BookStore.Infrastructure;
 
@@ -11,7 +16,9 @@ public static class DependencyInjection
 
         services
             .AddDataBaseConfig(connectionString)
-            .AddAuthenticationConfig();
+            .AddEmailConfig()
+            .AddBackgroundJobsConfig(configuration)
+            .AddAuthenticationConfig(configuration);
 
         return services;
     }
@@ -24,20 +31,77 @@ public static class DependencyInjection
         });
         return services;
     }
-    private static IServiceCollection AddAuthenticationConfig(this IServiceCollection services)
+    private static IServiceCollection AddEmailConfig(this IServiceCollection services)
     {
-        services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IEmailSender, EmailService>();
+        services
+            .AddOptions<EmailSettings>().BindConfiguration(EmailSettings.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        return services;
+    }
+    private static IServiceCollection AddAuthenticationConfig(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSingleton<IJwtProvider, JwtProvider>();
+        services.AddScoped<IAuthService, AuthService>();
 
         services.AddOptions<JwtOptions>()
             .BindConfiguration(JwtOptions.SectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
 
-        services.AddIdentityCore<ApplicationUser>()
-            .AddRoles<ApplicationRole>()
+        services.AddOptions<RefreshTokenOptions>()
+            .BindConfiguration(RefreshTokenOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddIdentity<ApplicationUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequiredLength = 8;
+            options.User.RequireUniqueEmail = true;
+            options.SignIn.RequireConfirmedEmail = true;
+        });
+
+        var jwtOptions = configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>() ??
+            throw new InvalidOperationException("Jwt options is missed");
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.SaveToken = true;
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = jwtOptions.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwtOptions.Audience,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey))
+            };
+        });
+
         return services;
     }
+    private static IServiceCollection AddBackgroundJobsConfig(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHangfire(config => config
+        .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+        .UseSimpleAssemblyNameTypeSerializer()
+        .UseRecommendedSerializerSettings()
+        .UseSqlServerStorage(configuration.GetConnectionString("HangfireConnection")));
+
+        services.AddHangfireServer();
+
+        return services;
+    }
+
 }

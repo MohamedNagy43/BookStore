@@ -1,15 +1,26 @@
-﻿global using BookStore.Infrastructure.Persistence;
-global using Microsoft.EntityFrameworkCore;
-global using Microsoft.Extensions.Configuration;
-global using Microsoft.Extensions.DependencyInjection;
-global using BookStore.Infrastructure.Identity;
-global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-global using BookStore.Shared.Constants.Identity;
-global using BookStore.Application.Abstractions;
-global using BookStore.Infrastructure.Authentication;
+﻿global using BookStore.Application.Abstractions;
 global using BookStore.Application.Common.Result;
 global using BookStore.Application.Features.Authentication.Contracts.Requests;
 global using BookStore.Application.Features.Authentication.Contracts.Responses;
+global using BookStore.Application.Features.Authentication.Errors;
 global using BookStore.Application.Features.Authentication.Services;
+global using BookStore.Infrastructure.Authentication;
+global using BookStore.Infrastructure.Identity;
+global using BookStore.Infrastructure.Persistence;
+global using BookStore.Shared.Constants.Identity;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Options;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Security.Cryptography;
+global using System.Text.Json;
+global using Mapster;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.WebUtilities;
+global using System.Text;
 
 

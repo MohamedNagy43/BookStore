@@ -1,7 +1,4 @@
-﻿using BookStore.Application.Common.Result;
-using Microsoft.AspNetCore.Mvc;
-
-namespace BookStore.Api.Extension;
+﻿namespace BookStore.Api.Extension;
 
 public static class ResultExtensions
 {

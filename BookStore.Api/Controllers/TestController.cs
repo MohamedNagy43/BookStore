@@ -1,12 +1,8 @@
-﻿using BookStore.Infrastructure.Identity;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-
-namespace BookStore.Api.Controllers;
+﻿namespace BookStore.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class TestController : ControllerBase
 {
     [HttpGet]

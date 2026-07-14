@@ -1,15 +1,21 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-namespace BookStore.Api.Controllers;
+﻿namespace BookStore.Api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class AuthController : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
-    [HttpGet("login")]
-    public async Task<IActionResult> Login()
+    private readonly IAuthService _authService = authService;
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
-        return Ok();
+        var result = await _authService.GetTokenAsync(request, cancellationToken);
+        return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
+    }
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken)
+    {
+        var result = await _authService.RegisterAsync(request, cancellationToken);
+        return result.IsSuccess ? Created() : result.ToProblem();
     }
 }
