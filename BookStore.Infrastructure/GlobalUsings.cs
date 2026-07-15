@@ -24,7 +24,7 @@ global using Microsoft.AspNetCore.WebUtilities;
 global using System.Text;
 global using BookStore.Application.Features.User.Errors;
 global using BookStore.Application.Features.User.Services;
-global using BookStore.Infrastructure.Helpers;
+global using BookStore.Shared.Helpers;
 global using Hangfire;
 global using Microsoft.AspNetCore.Identity.UI.Services;
 global using BookStore.Application.Features.Role.Errors;

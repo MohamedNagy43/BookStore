@@ -1,9 +1,4 @@
-﻿
-using BookStore.Infrastructure.Helpers;
-using Hangfire;
-using Microsoft.AspNetCore.Identity.UI.Services;
-
-namespace BookStore.Infrastructure.Authentication;
+﻿namespace BookStore.Infrastructure.Authentication;
 
 public class AuthService(UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
@@ -265,8 +260,8 @@ public class AuthService(UserManager<ApplicationUser> userManager,
             new(JwtRegisteredClaimNames.FamilyName,user.LastName),
             new(JwtRegisteredClaimNames.Email,user.Email!),
             new(JwtRegisteredClaimNames.Jti,Guid.CreateVersion7().ToString()),
-            new("Roles",JsonSerializer.Serialize(roles),JsonClaimValueTypes.JsonArray),
-            new("Permissions",JsonSerializer.Serialize(permissions),JsonClaimValueTypes.JsonArray),
+            new(DefaultRoles.Type,JsonSerializer.Serialize(roles),JsonClaimValueTypes.JsonArray),
+            new(Permissions.Type,JsonSerializer.Serialize(permissions),JsonClaimValueTypes.JsonArray),
         ];
     }
     private async Task SendConfirmationEmailAsync(ApplicationUser user, string code)

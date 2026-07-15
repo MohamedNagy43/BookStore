@@ -90,6 +90,9 @@ public class UserService(UserManager<ApplicationUser> userManager,
         if (user.EmailConfirmed)
             return Result.Failure(UserErrors.EmailAlreadyConfirmed);
 
+        if(user.PasswordHash is not null)
+            return Result.Failure(UserErrors.PasswordAlreadyExist);
+
         string token;
         try
         {

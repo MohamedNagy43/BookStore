@@ -2,6 +2,7 @@
 
 public static class DefaultRoles
 {
+    public const string Type = "roles";
     public static partial class Admin
     {
         public const string Id = "019f4b14-a55c-7327-b3f2-3875a5147ea4";

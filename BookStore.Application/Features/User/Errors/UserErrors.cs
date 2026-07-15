@@ -12,4 +12,6 @@ public record UserErrors
         , "Invalid Email Confirmation Code", ErrorType.Unauthorized);
     public static Error EmailAlreadyConfirmed => new Error("User.EmailAlreadyConfirmed"
         , "Email Is Aleady confirmed for this User", ErrorType.Validation);
+    public static Error PasswordAlreadyExist => new Error("User.PasswordAlreadyExist"
+        , "Password is exist please contact admin", ErrorType.Validation);
 }

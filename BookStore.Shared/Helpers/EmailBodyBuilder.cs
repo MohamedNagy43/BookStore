@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace BookStore.Infrastructure.Helpers;
+namespace BookStore.Shared.Helpers;
 
 public static class EmailBodyBuilder
 {

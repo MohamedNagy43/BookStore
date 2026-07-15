@@ -1,7 +1,10 @@
-﻿using BookStore.Infrastructure.Services;
+﻿using BookStore.Infrastructure.Authentication.Filters;
+using BookStore.Infrastructure.Identity.Services;
+using BookStore.Infrastructure.Services;
 using BookStore.Infrastructure.Settings;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
 
@@ -13,6 +16,9 @@ public static class DependencyInjection
     {
         string connectionString = configuration.GetConnectionString("DefaultConnection") ??
             throw new InvalidOperationException("Connection string of name DefaultConnection is missed");
+
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IRoleService, RoleService>();
 
         services
             .AddDataBaseConfig(connectionString)
@@ -45,6 +51,9 @@ public static class DependencyInjection
     {
         services.AddSingleton<IJwtProvider, JwtProvider>();
         services.AddScoped<IAuthService, AuthService>();
+
+        services.AddTransient<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
+        services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
         services.AddOptions<JwtOptions>()
             .BindConfiguration(JwtOptions.SectionName)
