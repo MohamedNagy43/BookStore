@@ -7,4 +7,6 @@ global using BookStore.Application.Features.User.Contracts.Requests;
 global using BookStore.Application.Features.User.Contracts.Responses;
 global using BookStore.Application.Features.Role.Contracts.Requests;
 global using BookStore.Application.Features.Role.Contracts.Responses;
+global using BookStore.Application.Abstractions.Specifications;
+global using BookStore.Domain.Common;
 

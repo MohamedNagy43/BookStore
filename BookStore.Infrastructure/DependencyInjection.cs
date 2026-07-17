@@ -2,10 +2,8 @@
 using BookStore.Infrastructure.Identity.Services;
 using BookStore.Infrastructure.Services;
 using BookStore.Infrastructure.Settings;
-using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BookStore.Infrastructure;
@@ -19,6 +17,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services
             .AddDataBaseConfig(connectionString)

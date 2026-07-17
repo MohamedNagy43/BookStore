@@ -31,5 +31,8 @@ global using BookStore.Application.Features.Role.Errors;
 global using BookStore.Application.Features.Role.Services;
 global using BookStore.Application.Features.User.Contracts.Requests;
 global using BookStore.Application.Features.User.Contracts.Responses;
+global using BookStore.Application.Abstractions.Repositories;
+global using BookStore.Application.Abstractions.Specifications;
+global using BookStore.Domain.Common;
 
 
