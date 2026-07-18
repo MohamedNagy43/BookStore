@@ -1,14 +1,19 @@
-﻿using BookStore.Domain.Entities;
+﻿using BookStore.Domain.Entities.Book;
+using BookStore.Domain.Entities.Common;
 using System.Reflection;
 
 namespace BookStore.Infrastructure.Persistence;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options,ICurrentUserService currentUserService)
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService)
     : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
 {
     private readonly ICurrentUserService _currentUserService = currentUserService;
 
     public DbSet<Book> Books { get; set; }
+    public DbSet<Author> Authors { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<BookFile> BookFiles { get; set; }
+    public DbSet<StoredFile> StoredFiles { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -25,7 +30,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .Entries<AuditableEntity>()
             .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
-        string? userId = _currentUserService.UserId ?? 
+        string? userId = _currentUserService.UserId ??
              throw new InvalidOperationException("User id must not be null here");
 
         foreach (var entry in AuditableEntries)
@@ -38,7 +43,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             }
             else if (entry.State == EntityState.Modified)
             {
-               
+
                 entry.Property(e => e.CreatedOn).IsModified = false;
                 entry.Property(e => e.CreatedById).IsModified = false;
 

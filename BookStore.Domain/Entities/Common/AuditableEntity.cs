@@ -1,4 +1,4 @@
-﻿namespace BookStore.Domain.Common;
+﻿namespace BookStore.Domain.Entities.Common;
 
 public abstract class AuditableEntity
 {

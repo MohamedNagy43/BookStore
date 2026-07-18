@@ -1,4 +1,4 @@
-﻿namespace BookStore.Domain.Common;
+﻿namespace BookStore.Domain.Entities.Common;
 
 public abstract class BaseEntity<TKey> : AuditableEntity where TKey : IEquatable<TKey> 
 {

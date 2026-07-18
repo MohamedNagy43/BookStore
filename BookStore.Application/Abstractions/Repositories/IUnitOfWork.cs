@@ -1,4 +1,6 @@
-﻿namespace BookStore.Application.Abstractions.Repositories;
+﻿using BookStore.Domain.Entities.Common;
+
+namespace BookStore.Application.Abstractions.Repositories;
 
 public interface IUnitOfWork
 {

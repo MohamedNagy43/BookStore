@@ -1,4 +1,5 @@
-﻿using BookStore.Infrastructure.Persistence.Repositories;
+﻿using BookStore.Domain.Entities.Common;
+using BookStore.Infrastructure.Persistence.Repositories;
 using System;
 using System.Collections;
 using System.Collections.Generic;

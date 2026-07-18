@@ -1,5 +1,6 @@
 ﻿using BookStore.Infrastructure.Authentication.Filters;
 using BookStore.Infrastructure.Identity.Services;
+using BookStore.Infrastructure.Persistence.Repositories;
 using BookStore.Infrastructure.Services;
 using BookStore.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         services
             .AddDataBaseConfig(connectionString)

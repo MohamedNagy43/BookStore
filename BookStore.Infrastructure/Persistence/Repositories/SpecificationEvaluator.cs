@@ -1,4 +1,6 @@
-﻿namespace BookStore.Infrastructure.Persistence.Repositories;
+﻿using BookStore.Domain.Entities.Common;
+
+namespace BookStore.Infrastructure.Persistence.Repositories;
 
 public static class SpecificationEvaluator
 {
