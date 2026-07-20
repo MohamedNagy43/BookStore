@@ -1,6 +1,6 @@
 ﻿using BookStore.Domain.Entities.Common;
 
-namespace BookStore.Application.Abstractions.Repositories;
+namespace BookStore.Application.Abstractions.Files;
 
 public interface IFileRepository
 {

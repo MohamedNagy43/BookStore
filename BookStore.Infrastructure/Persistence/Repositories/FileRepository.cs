@@ -1,4 +1,5 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Application.Abstractions.Files;
+using BookStore.Domain.Entities.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;

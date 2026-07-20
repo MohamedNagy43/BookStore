@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using BookStore.Application.Features.Books.Services;
+using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
 
@@ -10,6 +11,8 @@ public static class DependencyInjection
     {
         services
             .AddFluentValidationConfig();
+
+        services.AddScoped<IBookService, BookService>();
         return services;
     }
 
