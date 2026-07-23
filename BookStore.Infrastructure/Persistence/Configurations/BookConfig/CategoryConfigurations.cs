@@ -11,6 +11,7 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
     public void Configure(EntityTypeBuilder<Category> builder)
     {
         builder.Property(x => x.Name).HasMaxLength(250);
+        builder.HasIndex(x => x.Name).IsUnique();
         builder.Property(x => x.Description).HasMaxLength(600);
     }
 }

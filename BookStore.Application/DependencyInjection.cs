@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.Features.Authors.Services;
 using BookStore.Application.Features.Books.Services;
+using BookStore.Application.Features.Categories.Services;
 using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Reflection;
@@ -15,6 +16,7 @@ public static class DependencyInjection
 
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IAutherService, AutherService>();
+        services.AddScoped<ICategoryService, CategoryService>();
         return services;
     }
 

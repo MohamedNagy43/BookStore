@@ -63,7 +63,7 @@ public class AutherService(IUnitOfWork unitOfWork, IFileRepository fileRepositor
     {
 
         if (await _unitOfWork.Repository<Author, int>().GetByIdAsync(id, cancellationToken: cancellationToken) is not { } author)
-            return Result.Failure<AuthorResponse>(Error.NotFoundEntity<Author>());
+            return Result.Failure(Error.NotFoundEntity<Author>());
 
         request.Adapt(author);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -73,10 +73,10 @@ public class AutherService(IUnitOfWork unitOfWork, IFileRepository fileRepositor
     public async Task<Result> DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _unitOfWork.Repository<Author, int>().GetByIdAsync(id, includeDeleted: true, cancellationToken: cancellationToken) is not { } author)
-            return Result.Failure<AuthorResponse>(Error.NotFoundEntity<Author>());
+            return Result.Failure(Error.NotFoundEntity<Author>());
 
         if (author.IsDeleted)
-            return Result.Failure<AuthorResponse>(Error.DeletedEntity<Author>());
+            return Result.Failure(Error.DeletedEntity<Author>());
 
         author.IsDeleted = true;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
@@ -85,10 +85,10 @@ public class AutherService(IUnitOfWork unitOfWork, IFileRepository fileRepositor
     public async Task<Result> RestoreAsync(int id, CancellationToken cancellationToken = default)
     {
         if (await _unitOfWork.Repository<Author, int>().GetByIdAsync(id, includeDeleted: true, cancellationToken: cancellationToken) is not { } author)
-            return Result.Failure<AuthorResponse>(Error.NotFoundEntity<Author>());
+            return Result.Failure(Error.NotFoundEntity<Author>());
 
         if (!author.IsDeleted)
-            return Result.Failure<AuthorResponse>(Error.ActiveEntity<Author>());
+            return Result.Failure(Error.ActiveEntity<Author>());
 
         author.IsDeleted = false;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
