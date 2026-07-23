@@ -1,11 +1,14 @@
-﻿using BookStore.Domain.Entities.Book;
-using BookStore.Domain.Entities.Common;
+﻿using BookStore.Application.Abstractions.Common;
+using BookStore.Domain.Common;
+using BookStore.Domain.Entities.Authors;
+using BookStore.Domain.Entities.Books;
+using BookStore.Domain.Entities.Categories;
 using System.Reflection;
 
 namespace BookStore.Infrastructure.Persistence;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ICurrentUserService currentUserService)
-    : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
+    : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options), IAppDbContext
 {
     private readonly ICurrentUserService _currentUserService = currentUserService;
 
@@ -23,6 +26,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     {
         AddAuditInformaiton();
         return base.SaveChanges();
+    }
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+    {
+        AddAuditInformaiton();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
     private void AddAuditInformaiton()
     {

@@ -1,4 +1,6 @@
-﻿namespace BookStore.Infrastructure.Services;
+﻿using BookStore.Application.Abstractions.Common;
+
+namespace BookStore.Infrastructure.Services;
 
 public class CurrentUserService(IHttpContextAccessor httpContextAccessor) : ICurrentUserService
 {

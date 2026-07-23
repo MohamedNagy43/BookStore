@@ -4,6 +4,7 @@ using BookStore.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookStore.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260720173242_EditBookTable")]
+    partial class EditBookTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace BookStore.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StoredFiles", (string)null);
+                    b.ToTable("StoredFiles");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Entities.Book.Author", b =>
@@ -119,7 +122,7 @@ namespace BookStore.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("FileId");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Entities.Book.Book", b =>
@@ -206,7 +209,7 @@ namespace BookStore.Infrastructure.Persistence.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Entities.Book.BookFile", b =>
@@ -230,7 +233,7 @@ namespace BookStore.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("FileId");
 
-                    b.ToTable("BookFiles", (string)null);
+                    b.ToTable("BookFiles");
                 });
 
             modelBuilder.Entity("BookStore.Domain.Entities.Book.Category", b =>
@@ -274,7 +277,7 @@ namespace BookStore.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookStore.Infrastructure.Identity.ApplicationRole", b =>

@@ -8,12 +8,19 @@
 
   <ItemGroup>
     <Folder Include="Features\Authentication\Mapping\" />
+    <Folder Include="Features\Categories\Contracts\" />
+    <Folder Include="Features\Categories\Errors\" />
+    <Folder Include="Features\Categories\Mapping\" />
+    <Folder Include="Features\Categories\Services\" />
+    <Folder Include="Features\Categories\Specification\" />
+    <Folder Include="Features\Categories\Validators\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Mapster" Version="10.0.10" />
     <PackageReference Include="Mapster.DependencyInjection" Version="10.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
     <PackageReference Include="SharpGrip.FluentValidation.AutoValidation.Mvc" Version="2.0.0" />
   </ItemGroup>

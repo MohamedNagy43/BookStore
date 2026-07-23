@@ -1,4 +1,4 @@
-﻿namespace BookStore.Application.Abstractions;
+﻿namespace BookStore.Application.Abstractions.Common;
 
 public interface ICurrentUserService
 {

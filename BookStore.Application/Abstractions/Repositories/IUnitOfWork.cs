@@ -1,4 +1,4 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
 
 namespace BookStore.Application.Abstractions.Repositories;
 

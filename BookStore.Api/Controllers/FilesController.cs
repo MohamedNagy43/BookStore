@@ -14,7 +14,7 @@ public class FilesController(IFileService fileService) : ControllerBase
 {
     private readonly IFileService _fileService = fileService;
 
-    [HttpPost("upload")]
+    [HttpPost("upload-image")]
     public async Task<IActionResult> Upload([FromForm] IFormFile file, [FromServices] IValidator<FileRequest> validator,
         CancellationToken cancellationToken)
     {
@@ -30,10 +30,10 @@ public class FilesController(IFileService fileService) : ControllerBase
 
         var Id = await _fileService.UploadAsync(request, cancellationToken);
 
-        return CreatedAtAction(nameof(Download), new { Id }, null);
+        return CreatedAtAction(nameof(Download), new { Id }, Id);
     }
 
-    [HttpPost("upload-many")]
+    [HttpPost("upload-many-images")]
     public async Task<IActionResult> UploadMany([FromForm] IFormFileCollection files,
         [FromServices] IValidator<MultipleFileRequest> validator, CancellationToken cancellationToken)
     {

@@ -1,5 +1,5 @@
 ﻿using BookStore.Application.Common.Contracts;
-using BookStore.Domain.Entities.Book;
+using BookStore.Domain.Entities.Books;
 using System.Linq.Expressions;
 
 namespace BookStore.Application.Features.Books.Specifications;
@@ -17,7 +17,7 @@ public class BookSpecification : Specification<Book>, ISpecification<Book>
     {
         base.AddIncludes(x => x.BookFiles, x => x.Category, x => x.Author);
     }
-    private void ApplySorting(string? sortColumn, string sortDirction)
+    private void ApplySorting(string? sortColumn, string sortDirction = "ASC")
     {
         if (string.IsNullOrWhiteSpace(sortColumn))
             return;

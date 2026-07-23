@@ -1,6 +1,6 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
 
-namespace BookStore.Domain.Entities.Book;
+namespace BookStore.Domain.Entities.Books;
 
 public class BookFile
 {

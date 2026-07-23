@@ -1,4 +1,4 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
 using BookStore.Infrastructure.Persistence.Repositories;
 using System;
 using System.Collections;

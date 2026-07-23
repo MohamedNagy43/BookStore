@@ -1,6 +1,7 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
+using BookStore.Domain.Entities.Books;
 
-namespace BookStore.Domain.Entities.Book;
+namespace BookStore.Domain.Entities.Authors;
 
 public class Author : BaseEntity<int>
 {

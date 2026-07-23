@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BookStore.Application.Features.Books.Contracts.Responses;
+namespace BookStore.Application.Features.Books.Contracts.Requests;
 
-public record BookResponse(
-    Guid Id,
+public record CreateBookRequest(
     string Title,
     string Description,
     decimal Price,
+    int StockQuantity,
     int PageCount,
     string Language,
     string PublisherName,
     DateTime PublicationDate,
     string Edition,
     double Weight,
-    bool IsAvailable,
-    string? CoverUrl,
-    IEnumerable<string> ImagesUrls
+    int CategoryId,
+    int AuthorId,
+    Guid CoverImageId,
+    IEnumerable<Guid> GalleryImageIds
 );

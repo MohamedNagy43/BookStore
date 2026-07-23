@@ -1,8 +1,8 @@
 ﻿namespace BookStore.Application.Common;
 
-public class PaginatedList<T>(List<T> items, int pageNumber, int count, int pageSize)
+public class PaginatedList<T>(IEnumerable<T> items, int pageNumber, int count, int pageSize)
 {
-    public List<T> Items { get; private set; } = items;
+    public IEnumerable<T> Items { get; private set; } = items;
     public int PageNumber { get; private set; } = pageNumber;
     public int TotalPages { get; private set; } = (int)Math.Ceiling((double)count / pageSize);
     public bool HasPreviousPage => PageNumber > 1;

@@ -1,13 +1,15 @@
-﻿using BookStore.Application.Abstractions.Files;
+﻿using BookStore.Application.Abstractions.Common;
+using BookStore.Application.Abstractions.Files;
 using BookStore.Application.Abstractions.Files.Contracts;
-using BookStore.Domain.Entities.Common;
+using BookStore.Domain.Common;
+using BookStore.Shared.Constants;
 using Microsoft.AspNetCore.Hosting;
 
 namespace BookStore.Infrastructure.Services;
 
 public class FileService(IWebHostEnvironment webHostEnvironment, ApplicationDbContext context, ICurrentUserService currentUserService) : IFileService
 {
-    private readonly string _filePath = $"{webHostEnvironment.WebRootPath}/uploads";
+    private readonly string _filePath = $"{webHostEnvironment.WebRootPath}/{FileSettings.FileUploadPath}";
     private readonly ApplicationDbContext _context = context;
     private readonly ICurrentUserService _currentUserService = currentUserService;
 
@@ -58,19 +60,23 @@ public class FileService(IWebHostEnvironment webHostEnvironment, ApplicationDbCo
     // Private
     private async Task<StoredFile> SaveFile(FileRequest request, CancellationToken cancellationToken = default)
     {
+        var extension = Path.GetExtension(request.FileName);
+        var storeadFileName = $"{Guid.CreateVersion7()}.{extension}";
+
+
         request.FileStream.Position = 0;
         var storedFile = new StoredFile
         {
             FileName = request.FileName,
-            StoredFileName = Path.GetRandomFileName(),
+            StoredFileName = storeadFileName,
             ContentType = request.ContentType,
-            FileExtension = Path.GetExtension(request.FileName),
+            FileExtension = extension,
             Size = request.FileStream.Length,
-            Path = "uploads",
+            Path = FileSettings.FileUploadPath,
             UploadedById = _currentUserService.UserId!
         };
 
-        string path = Path.Combine(_filePath, storedFile.StoredFileName);
+        string path = Path.Combine(_filePath, storeadFileName);
 
         using var stream = File.Create(path);
         await request.FileStream.CopyToAsync(stream, cancellationToken);

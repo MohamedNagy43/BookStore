@@ -25,9 +25,6 @@ public class Result<TValue> : Result
     private readonly TValue? _value;
     public Result(TValue? value, bool isSuccess, Error error) : base(isSuccess, error)
     {
-        if ((isSuccess && value is null) || (!isSuccess && value is not null))
-            throw new InvalidOperationException("Arguments not Suitable");
-
         _value = value;
     }
 

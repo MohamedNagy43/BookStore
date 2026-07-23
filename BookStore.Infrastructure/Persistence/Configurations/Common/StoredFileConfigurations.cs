@@ -1,4 +1,4 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
 using BookStore.Shared.Constants;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

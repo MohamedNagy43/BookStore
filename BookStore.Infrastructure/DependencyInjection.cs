@@ -1,4 +1,5 @@
-﻿using BookStore.Application.Abstractions.Files;
+﻿using BookStore.Application.Abstractions.Common;
+using BookStore.Application.Abstractions.Files;
 using BookStore.Infrastructure.Authentication.Filters;
 using BookStore.Infrastructure.Identity.Services;
 using BookStore.Infrastructure.Persistence.Repositories;
@@ -20,9 +21,11 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IAppDbContext, ApplicationDbContext>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<IFileUrlProvider, FileUrlProvider>();
 
         services
             .AddDataBaseConfig(connectionString)

@@ -1,4 +1,4 @@
-﻿namespace BookStore.Domain.Entities.Common;
+﻿namespace BookStore.Domain.Common;
 
 public class StoredFile
 {

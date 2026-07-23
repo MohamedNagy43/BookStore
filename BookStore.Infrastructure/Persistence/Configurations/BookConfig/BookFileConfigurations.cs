@@ -1,4 +1,4 @@
-﻿using BookStore.Domain.Entities.Book;
+﻿using BookStore.Domain.Entities.Books;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BookStore.Infrastructure.Persistence.Configurations.BookConfig;

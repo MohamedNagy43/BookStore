@@ -1,6 +1,8 @@
-﻿using BookStore.Domain.Entities.Common;
+﻿using BookStore.Domain.Common;
+using BookStore.Domain.Entities.Authors;
+using BookStore.Domain.Entities.Categories;
 
-namespace BookStore.Domain.Entities.Book;
+namespace BookStore.Domain.Entities.Books;
 
 public class Book : BaseEntity<Guid>
 {
@@ -14,7 +16,8 @@ public class Book : BaseEntity<Guid>
     public DateTime PublicationDate { get; set; }
     public string Edition { get; set; } = string.Empty;
     public double Weight { get; set; }
-    public bool IsAvailable { get; set; } = true;
+    public bool IsAvailable => StockQuantity > 0;
+
     public ICollection<BookFile> BookFiles { get; set; } = [];
     public int CategoryId { get; set; }
     public int AuthorId { get; set; }
